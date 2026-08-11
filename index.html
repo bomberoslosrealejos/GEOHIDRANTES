@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#b40000"><link rel="manifest" href="manifest.json">
+<title>GEOHIDRANTES</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#17202a}
+header{background:#b40000;color:#fff;padding:18px 16px}header h1{margin:0;font-size:24px}header p{margin:4px 0 0}
+main{max-width:760px;margin:auto;padding:14px}.panel,.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #0001}
+button,input,select{font-size:16px;border-radius:10px;padding:12px;border:1px solid #ccd2d8}
+button{background:#b40000;color:white;border:0;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input{width:100%}.badge{padding:5px 9px;border-radius:20px;color:#fff;font-size:12px;font-weight:700}.verde{background:#159447}.naranja{background:#e88700}.rojo{background:#d71920}
+.muted{color:#667085;font-size:14px}.card h3{margin:0 0 7px}.card p{margin:7px 0;line-height:1.4}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1;min-width:150px}
+</style></head>
+<body><header><h1>🚒 GEOHIDRANTES</h1><p>Bomberos Voluntarios de Los Realejos</p></header>
+<main>
+<section class="panel"><div class="grid"><button onclick="locate()">📍 MI UBICACIÓN</button><button onclick="installApp()" id="install" hidden>📲 INSTALAR APP</button></div>
+<p id="msg" class="muted">Pulsa “Mi ubicación” para localizar los hidrantes más cercanos.</p>
+<input id="search" placeholder="🔎 Buscar hidrante..." oninput="render()"></section>
+<section class="panel"><div class="grid"><select id="status" onchange="render()"><option value="">Todos los estados</option><option value="verde">🟢 Operativos</option><option value="naranja">🟠 Pendientes</option><option value="rojo">🔴 No operativos</option></select><select id="limit" onchange="render()"><option>20</option><option>50</option><option>100</option></select></div></section>
+<div id="list"></div>
+</main>
+<script src="data.js"></script>
+<script>
+let pos=null,deferred=null;
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;document.getElementById('install').hidden=false});
+async function installApp(){if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null}
+function distance(a,b,c,d){const R=6371000,p=Math.PI/180,x=(c-a)*p,y=(d-b)*p,h=Math.sin(y/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(x/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function locate(){if(!navigator.geolocation){msg.textContent='Este dispositivo no admite GPS.';return}
+msg.textContent='Obteniendo ubicación...';navigator.geolocation.getCurrentPosition(p=>{pos={lat:p.coords.latitude,lon:p.coords.longitude};msg.textContent='📍 Ubicación obtenida. Ordenando por distancia...';render()},e=>{msg.textContent='No se pudo obtener la ubicación. Concede permiso de ubicación al navegador.'},{enableHighAccuracy:true,timeout:10000})}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function nav(i){const h=HYDRANTS[i];location.href='https://www.google.com/maps/dir/?api=1&destination='+h.lat+','+h.lon}
+function render(){const q=search.value.toLowerCase(), st=status.value, lim=+limit.value;
+let a=HYDRANTS.map((h,i)=>({...h,i,d:pos?distance(pos.lat,pos.lon,h.lat,h.lon):null})).filter(h=>(h.name+' '+h.description).toLowerCase().includes(q)&&(!st||h.status===st));
+a.sort((x,y)=>(x.d??1e99)-(y.d??1e99));
+list.innerHTML=a.slice(0,lim).map(h=>`<article class="card"><h3>${esc(h.name)} <span class="badge ${h.status}">${h.status==='verde'?'OPERATIVO':h.status==='naranja'?'PENDIENTE':'NO OPERATIVO'}</span></h3>${h.d!==null?`<p><b>${Math.round(h.d)} m</b> desde tu ubicación</p>`:''}<p class="muted">${h.lat.toFixed(6)}, ${h.lon.toFixed(6)}</p>${h.description?`<p>${esc(h.description)}</p>`:''}<div class="actions"><button onclick="nav(${h.i})">🧭 CÓMO LLEGAR</button></div></article>`).join('')}
+render();
+</script></body></html>

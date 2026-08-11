@@ -1,0 +1,10 @@
+{
+  "name": "GEOHIDRANTES Bomberos Voluntarios",
+  "short_name": "GEOHIDRANTES",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#b40000",
+  "lang": "es",
+  "icons": []
+}
