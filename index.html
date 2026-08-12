@@ -1,39 +1,60 @@
-<!doctype html>
-<html lang="es"><head>
+<!doctype html><html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#b40000"><link rel="manifest" href="manifest.json">
-<title>GEOHIDRANTES</title>
+<meta name="theme-color" content="#087ea4"><link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<title>GEOHIDRANTE CANARIAS</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#17202a}
-header{background:#b40000;color:#fff;padding:18px 16px}header h1{margin:0;font-size:24px}header p{margin:4px 0 0}
-main{max-width:760px;margin:auto;padding:14px}.panel,.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #0001}
-button,input,select{font-size:16px;border-radius:10px;padding:12px;border:1px solid #ccd2d8}
-button{background:#b40000;color:white;border:0;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-input{width:100%}.badge{padding:5px 9px;border-radius:20px;color:#fff;font-size:12px;font-weight:700}.verde{background:#159447}.naranja{background:#e88700}.rojo{background:#d71920}
-.muted{color:#667085;font-size:14px}.card h3{margin:0 0 7px}.card p{margin:7px 0;line-height:1.4}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1;min-width:150px}
-</style></head>
-<body><header><h1>🚒 GEOHIDRANTES</h1><p>Bomberos Voluntarios de Los Realejos</p></header>
+:root{--blue:#087ea4;--blue2:#0aa6c8;--bg:#eef7fa;--text:#17313a}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#066b8d,#0aa6c8);color:white;padding:17px 16px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px #0003}
+header h1{margin:0;font-size:23px}header p{margin:4px 0 0;font-size:13px}
+main{max-width:920px;margin:auto;padding:11px}.panel,.card{background:#fff;border-radius:15px;padding:13px;margin-bottom:11px;box-shadow:0 2px 9px #0001}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}button,input,select{font-size:16px;padding:12px;border-radius:11px;border:1px solid #c9d9de}
+button{background:var(--blue);color:white;border:0;font-weight:700;cursor:pointer}button.secondary{background:#e5f5f8;color:#075d76}
+#map{height:50vh;min-height:350px;border-radius:14px;overflow:hidden}.muted{color:#667b83;font-size:13px}
+.badge{color:white;padding:5px 8px;border-radius:15px;font-size:11px;font-weight:700}.verde{background:#159447}.naranja{background:#e88700}.rojo{background:#d71920}
+.card h3{margin:0 0 6px;font-size:17px}.card p{margin:6px 0;line-height:1.4}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{flex:1;min-width:145px}
+.section-title{font-size:18px;margin:16px 3px 8px}.near{border-left:5px solid var(--blue)}
+.collab{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #e1ecef;border-radius:12px;margin-top:8px}
+.shield{width:48px;height:48px;border-radius:10px;background:#e8f4f7;display:grid;place-items:center;font-size:24px}
+.collab strong{display:block}.collab span{font-size:12px;color:#687d84}.footer{text-align:center;color:#6b7d82;font-size:12px;padding:14px}
+</style></head><body>
+<header><h1>💧 GEOHIDRANTE CANARIAS</h1><p>Localización y gestión de hidrantes · Servicios de emergencia</p></header>
 <main>
-<section class="panel"><div class="grid"><button onclick="locate()">📍 MI UBICACIÓN</button><button onclick="installApp()" id="install" hidden>📲 INSTALAR APP</button></div>
-<p id="msg" class="muted">Pulsa “Mi ubicación” para localizar los hidrantes más cercanos.</p>
-<input id="search" placeholder="🔎 Buscar hidrante..." oninput="render()"></section>
-<section class="panel"><div class="grid"><select id="status" onchange="render()"><option value="">Todos los estados</option><option value="verde">🟢 Operativos</option><option value="naranja">🟠 Pendientes</option><option value="rojo">🔴 No operativos</option></select><select id="limit" onchange="render()"><option>20</option><option>50</option><option>100</option></select></div></section>
-<div id="list"></div>
+<section class="panel"><div class="grid"><button onclick="locate()">📍 MI UBICACIÓN</button><button onclick="showAll()">🗺️ MAPA COMPLETO</button></div>
+<p id="msg" class="muted">Pulsa “Mi ubicación” para ver los hidrantes más cercanos.</p>
+<input id="search" style="width:100%" placeholder="🔎 Buscar hidrante..." oninput="render()"></section>
+<div id="map"></div>
+<section class="panel"><div class="grid">
+<select id="status" onchange="render()"><option value="">Todos los estados</option><option value="verde">🟢 Operativos</option><option value="naranja">🟠 Pendientes</option><option value="rojo">🔴 No operativos</option></select>
+<select id="limit" onchange="render()"><option value="5">5 cercanos</option><option value="10">10 cercanos</option><option value="20">20 cercanos</option></select>
+</div></section>
+<h2 id="title" class="section-title">📍 Hidrantes más cercanos</h2><div id="list"></div>
+<section class="panel"><h2 class="section-title" style="margin-top:0">🤝 Entidades colaboradoras</h2>
+<p class="muted">Espacio reservado para los servicios y entidades que colaboren en el proyecto.</p>
+<div class="collab"><div class="shield">🚓</div><div><strong>Policía Local</strong><span>Entidad colaboradora</span></div></div>
+<div class="collab"><div class="shield">🛡️</div><div><strong>Protección Civil</strong><span>Entidad colaboradora</span></div></div>
+<div class="collab"><div class="shield">🚒</div><div><strong>Servicio de Bomberos</strong><span>Entidad colaboradora</span></div></div>
+<p class="muted">Los escudos oficiales podrán incorporarse cuando se disponga de los archivos autorizados de cada entidad.</p></section>
+<section class="panel"><h2 class="section-title" style="margin-top:0">ℹ️ Sobre el proyecto</h2>
+<p class="muted">GEOHIDRANTE CANARIAS facilita la localización de puntos de agua para apoyar la coordinación y respuesta de los servicios de emergencia.</p></section>
+<div class="footer">GEOHIDRANTE CANARIAS · Versión 3</div>
 </main>
-<script src="data.js"></script>
-<script>
-let pos=null,deferred=null;
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;document.getElementById('install').hidden=false});
-async function installApp(){if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="data.js"></script><script>
+let pos=null,map=L.map('map').setView([28.35,-16.55],10),markers=[],userMarker=null;
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+const color=s=>s==='verde'?'#159447':s==='naranja'?'#e88700':'#d71920';
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function distance(a,b,c,d){const R=6371000,p=Math.PI/180,x=(c-a)*p,y=(d-b)*p,h=Math.sin(y/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(x/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
-function locate(){if(!navigator.geolocation){msg.textContent='Este dispositivo no admite GPS.';return}
-msg.textContent='Obteniendo ubicación...';navigator.geolocation.getCurrentPosition(p=>{pos={lat:p.coords.latitude,lon:p.coords.longitude};msg.textContent='📍 Ubicación obtenida. Ordenando por distancia...';render()},e=>{msg.textContent='No se pudo obtener la ubicación. Concede permiso de ubicación al navegador.'},{enableHighAccuracy:true,timeout:10000})}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function clearMarkers(){markers.forEach(m=>map.removeLayer(m));markers=[]}
+function drawMarkers(arr){clearMarkers();arr.forEach(h=>{let m=L.circleMarker([h.lat,h.lon],{radius:6,color:'#fff',weight:2,fillColor:color(h.status),fillOpacity:.95}).addTo(map);m.bindPopup('<b>'+esc(h.name)+'</b><br><span style="color:'+color(h.status)+'">'+h.status.toUpperCase()+'</span><br><br><button onclick="nav('+h.i+')">🧭 Cómo llegar</button>');markers.push(m)})}
+function locate(){if(!navigator.geolocation){msg.textContent='Este dispositivo no admite GPS.';return}msg.textContent='Obteniendo ubicación...';navigator.geolocation.getCurrentPosition(p=>{pos={lat:p.coords.latitude,lon:p.coords.longitude};if(userMarker)map.removeLayer(userMarker);userMarker=L.marker([pos.lat,pos.lon]).addTo(map).bindPopup('📍 Tu ubicación');map.setView([pos.lat,pos.lon],15);msg.textContent='📍 Ubicación obtenida. Mostrando hidrantes cercanos.';render()},()=>msg.textContent='No se pudo obtener la ubicación. Comprueba los permisos.',{enableHighAccuracy:true,timeout:12000})}
 function nav(i){const h=HYDRANTS[i];location.href='https://www.google.com/maps/dir/?api=1&destination='+h.lat+','+h.lon}
-function render(){const q=search.value.toLowerCase(), st=status.value, lim=+limit.value;
-let a=HYDRANTS.map((h,i)=>({...h,i,d:pos?distance(pos.lat,pos.lon,h.lat,h.lon):null})).filter(h=>(h.name+' '+h.description).toLowerCase().includes(q)&&(!st||h.status===st));
-a.sort((x,y)=>(x.d??1e99)-(y.d??1e99));
-list.innerHTML=a.slice(0,lim).map(h=>`<article class="card"><h3>${esc(h.name)} <span class="badge ${h.status}">${h.status==='verde'?'OPERATIVO':h.status==='naranja'?'PENDIENTE':'NO OPERATIVO'}</span></h3>${h.d!==null?`<p><b>${Math.round(h.d)} m</b> desde tu ubicación</p>`:''}<p class="muted">${h.lat.toFixed(6)}, ${h.lon.toFixed(6)}</p>${h.description?`<p>${esc(h.description)}</p>`:''}<div class="actions"><button onclick="nav(${h.i})">🧭 CÓMO LLEGAR</button></div></article>`).join('')}
+function showAll(){map.fitBounds(L.latLngBounds(HYDRANTS.map(h=>[h.lat,h.lon])));title.textContent='🗺️ Todos los hidrantes';render(true)}
+function render(all=false){let q=search.value.toLowerCase(),st=status.value,lim=+limit.value;
+let arr=HYDRANTS.map((h,i)=>({...h,i,d:pos?distance(pos.lat,pos.lon,h.lat,h.lon):null})).filter(h=>(h.name+' '+h.description).toLowerCase().includes(q)&&(!st||h.status===st));
+arr.sort((a,b)=>(a.d??1e99)-(b.d??1e99));drawMarkers(arr);let shown=all?arr:arr.slice(0,lim);
+title.textContent=pos&&!all?'📍 Hidrantes más cercanos':'🗺️ Hidrantes';
+list.innerHTML=shown.map(h=>'<article class="card '+(pos?'near':'')+'"><h3>'+esc(h.name)+' <span class="badge '+h.status+'">'+(h.status==='verde'?'OPERATIVO':h.status==='naranja'?'PENDIENTE':'NO OPERATIVO')+'</span></h3>'+(h.d!==null?'<p><b>'+Math.round(h.d)+' m</b> desde tu ubicación</p>':'')+'<p class="muted">'+h.lat.toFixed(6)+', '+h.lon.toFixed(6)+'</p>'+(h.description?'<p>'+esc(h.description)+'</p>':'')+'<div class="actions"><button onclick="nav('+h.i+')">🧭 CÓMO LLEGAR</button><button class="secondary" onclick="map.setView(['+h.lat+','+h.lon+'],17)">📍 VER EN MAPA</button></div></article>').join('')}
 render();
 </script></body></html>
