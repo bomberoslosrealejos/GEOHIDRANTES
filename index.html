@@ -7,7 +7,7 @@
 :root{--blue:#087ea4;--blue2:#0aa6c8;--bg:#eef7fa;--text:#17313a}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 header{background:linear-gradient(135deg,#066b8d,#0aa6c8);color:#fff;padding:12px 14px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px #0003}
-.head{display:flex;align-items:center;gap:12px}.logo{width:64px;height:64px;object-fit:contain;background:#fff;border-radius:12px;padding:3px}
+.head{display:flex;align-items:center;gap:12px}.truck{width:88px;height:62px;object-fit:contain;flex:0 0 auto}
 h1{margin:0;font-size:22px;line-height:1.1}.sub{margin-top:5px;font-size:12px;opacity:.97}
 main{max-width:920px;margin:auto;padding:11px}.panel,.card{background:#fff;border-radius:15px;padding:13px;margin-bottom:11px;box-shadow:0 2px 9px #0001}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}button,input,select{font-size:16px;padding:12px;border-radius:11px;border:1px solid #c9d9de}
@@ -18,11 +18,10 @@ button{background:var(--blue);color:white;border:0;font-weight:700}button.second
 .title{font-size:18px;margin:16px 3px 8px}.near{border-left:5px solid var(--blue)}
 .collab{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #e1ecef;border-radius:12px;margin-top:8px}
 .shield{width:48px;height:48px;border-radius:10px;background:#e8f4f7;display:grid;place-items:center;font-size:24px}
-.footer{text-align:center;color:#6b7d82;font-size:12px;padding:14px}
+.footer{text-align:center;color:#6b7d82;font-size:12px;padding:14px}.update{border-left:5px solid var(--blue);background:#f1fbfd}.update h2{margin:0 0 6px;font-size:18px}.pill{display:inline-block;background:#e5f5f8;border-radius:20px;padding:6px 9px;font-size:12px;font-weight:700;margin-right:6px}.disclaimer{border-left:5px solid #e88700;background:#fffaf0}
 </style><!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e1ed4d525d9a42a882ca4a6cc1d307b7"}'></script><!-- End Cloudflare Web Analytics --></head><body>
-<header><div class="head"><img class="logo" src="escudo.png" alt="Bomberos Voluntarios de Los Realejos">
-<div><h1>💧 GEOHIDRANTE CANARIAS</h1><div class="sub"><b>Bomberos Voluntarios de Los Realejos</b><br>Proyecto de localización y gestión de hidrantes</div></div></div></header>
-<main>
+<header><div class="head"><img class="truck" src="camion.svg" alt="Camión de bomberos"><div><h1>GEOHIDRANTE CANARIAS</h1><div class="sub"><b>Bomberos Voluntarios de Los Realejos</b><br>Proyecto de localización y gestión de hidrantes</div></div></div></header>
+<main><section class="panel update"><h2>🔔 Novedades</h2><p><b id="updateTitle">Nueva actualización de GEOHIDRANTE CANARIAS</b></p><p id="updateText" class="muted">Base de datos actualizada con nuevos, modificados y retirados hidrantes.</p><span class="pill">Versión <span id="appVersion">3.4</span></span><span class="pill">Datos: <span id="dataDate">13/08/2026</span></span></section>
 <section class="panel"><div class="grid"><button onclick="locate()">📍 MI UBICACIÓN</button><button onclick="openMyMaps()">🌐 MAPA COMPLETO</button></div>
 <p id="msg" class="muted">Mapa en vista satélite. Pulsa “Mi ubicación” para localizar los hidrantes más cercanos.</p>
 <input id="search" style="width:100%" placeholder="🔎 Buscar hidrante..." oninput="render()"></section>
@@ -32,15 +31,12 @@ button{background:var(--blue);color:white;border:0;font-weight:700}button.second
 <select id="limit" onchange="render()"><option value="5">5 cercanos</option><option value="10">10 cercanos</option><option value="20">20 cercanos</option></select>
 </div></section>
 <h2 id="title" class="title">📍 Hidrantes más cercanos</h2><div id="list"></div>
-<section class="panel"><h2 class="title" style="margin-top:0">🤝 Entidades colaboradoras</h2>
-<p class="muted">Espacio destinado a identificar, cuando proceda, a las entidades y servicios que colaboren en el proyecto.</p>
-<div class="collab"><div class="shield">🚓</div><div><b>Policía Local</b><br><span class="muted">Colaboración — cuando proceda</span></div></div>
-<div class="collab"><div class="shield">🛡️</div><div><b>Protección Civil</b><br><span class="muted">Colaboración — cuando proceda</span></div></div>
-<div class="collab"><div class="shield">🚒</div><div><b>Servicios de emergencia</b><br><span class="muted">Entidades colaboradoras</span></div></div>
-</section>
-<section class="panel"><h2 class="title" style="margin-top:0">ℹ️ Sobre el proyecto</h2>
-<p class="muted">GEOHIDRANTE CANARIAS es un proyecto de Bomberos Voluntarios de Los Realejos para facilitar la localización de puntos de agua y apoyar la respuesta de los servicios de emergencia.</p></section>
-<div class="footer">GEOHIDRANTE CANARIAS · V3.1</div>
+<section class="panel"><h2 class="title" style="margin-top:0">🤝 Entidades colaboradoras</h2><p class="muted">Proyecto impulsado por la Asociación de Bomberos Voluntarios de Los Realejos.</p><div class="collab"><img src="escudo.png" style="width:48px;height:48px;object-fit:contain;border-radius:10px" alt="Escudo"><div><b>Bomberos Voluntarios de Los Realejos</b><br><span class="muted">Entidad impulsora del proyecto</span></div></div><div class="pill">➕ 11 nuevos</div><div class="pill">✏️ 57 modificados</div><div class="pill">❌ 1 retirado</div><div class="pill">💧 716 total</div></section>
+<section class="panel"><h2 class="title" style="margin-top:0">📊 Estadísticas de acceso</h2>
+<p class="muted">La aplicación queda preparada para registrar de forma anónima las visitas y mostrar estadísticas de uso. El contador público no se mostrará en la zona operativa.</p>
+<div class="pill">Contador: preparado</div>
+</section><section class="panel"><h2 class="title" style="margin-top:0">ℹ️ Sobre el proyecto</h2><p class="muted">GEOHIDRANTE CANARIAS es un proyecto de Bomberos Voluntarios de Los Realejos para facilitar la localización de puntos de agua y apoyar la respuesta de los servicios de emergencia.</p><div class="panel disclaimer" style="margin:10px 0 0;box-shadow:none"><b>⚠️ Aviso importante</b><p class="muted">La aplicación tiene como finalidad exclusivamente la <b>geolocalización de hidrantes</b>. La Asociación de Bomberos Voluntarios de Los Realejos <b>no se hace responsable del estado, operatividad, accesibilidad, presión, caudal o disponibilidad de agua de los hidrantes</b>. La información mostrada puede estar sujeta a cambios y debe verificarse sobre el terreno cuando sea necesario.</p></div></section>
+<div class="footer">GEOHIDRANTE CANARIAS · V3.4</div>
 </main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="data.js"></script><script>
 let pos=null,map=L.map('map').setView([28.35,-16.55],10),markers=[],userMarker=null;
@@ -49,14 +45,24 @@ const MYMAPS='https://www.google.com/maps/d/edit?mid=1ZxwWvH1CkGi_AxqAPsCJuQfWEy
 const color=s=>s==='verde'?'#159447':s==='naranja'?'#e88700':'#d71920';
 const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function distance(a,b,c,d){const R=6371000,p=Math.PI/180,x=(c-a)*p,y=(d-b)*p,h=Math.sin(y/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(x/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function fmtDist(m){if(m==null)return '';return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
+async function routeDistance(lat1,lon1,lat2,lon2){
+  try{
+    const u='https://router.project-osrm.org/route/v1/driving/'+lon1+','+lat1+';'+lon2+','+lat2+'?overview=false';
+    const r=await fetch(u); if(!r.ok) throw 0; const j=await r.json();
+    return j.routes&&j.routes[0]?j.routes[0].distance:null;
+  }catch(e){return null}
+}
 function clear(){markers.forEach(m=>map.removeLayer(m));markers=[]}
 function draw(a){clear();a.forEach(h=>{let m=L.circleMarker([h.lat,h.lon],{radius:6,color:'#fff',weight:2,fillColor:color(h.status),fillOpacity:.96}).addTo(map);m.bindPopup('<b>'+esc(h.name)+'</b><br><span style="color:'+color(h.status)+'">'+h.status.toUpperCase()+'</span><br><br><button onclick="nav('+h.i+')">🧭 Cómo llegar</button>');markers.push(m)})}
 function locate(){if(!navigator.geolocation){msg.textContent='Este dispositivo no admite GPS.';return}msg.textContent='Obteniendo ubicación...';navigator.geolocation.getCurrentPosition(p=>{pos={lat:p.coords.latitude,lon:p.coords.longitude};if(userMarker)map.removeLayer(userMarker);userMarker=L.marker([pos.lat,pos.lon]).addTo(map).bindPopup('📍 Tu ubicación');map.setView([pos.lat,pos.lon],16);msg.textContent='📍 Ubicación obtenida. Mostrando hidrantes cercanos.';render()},()=>msg.textContent='No se pudo obtener la ubicación. Comprueba los permisos.',{enableHighAccuracy:true,timeout:12000})}
 function nav(i){let h=HYDRANTS[i];location.href='https://www.google.com/maps/dir/?api=1&destination='+h.lat+','+h.lon}
 function openMyMaps(){location.href=MYMAPS}
-function render(){let q=search.value.toLowerCase(),st=status.value,lim=+limit.value;
-let a=HYDRANTS.map((h,i)=>({...h,i,d:pos?distance(pos.lat,pos.lon,h.lat,h.lon):null})).filter(h=>(h.name+' '+h.description).toLowerCase().includes(q)&&(!st||h.status===st));
+async function render(){let q=search.value.toLowerCase(),st=status.value,lim=+limit.value;
+let a=HYDRANTS.map((h,i)=>({...h,i,d:pos?distance(pos.lat,pos.lon,h.lat,h.lon):null,rd:null})).filter(h=>(h.name+' '+h.description).toLowerCase().includes(q)&&(!st||h.status===st));
 a.sort((x,y)=>(x.d??1e99)-(y.d??1e99));draw(a);let show=a.slice(0,lim);
-title.textContent=pos?'📍 Hidrantes más cercanos':'🗺️ Hidrantes';list.innerHTML=show.map(h=>'<article class="card '+(pos?'near':'')+'"><h3>'+esc(h.name)+' <span class="badge '+h.status+'">'+(h.status==='verde'?'OPERATIVO':h.status==='naranja'?'PENDIENTE':'NO OPERATIVO')+'</span></h3>'+(h.d!==null?'<p><b>'+Math.round(h.d)+' m</b> desde tu ubicación</p>':'')+'<p class="muted">'+h.lat.toFixed(6)+', '+h.lon.toFixed(6)+'</p>'+(h.description?'<p>'+esc(h.description)+'</p>':'')+'<div class="actions"><button onclick="nav('+h.i+')">🧭 CÓMO LLEGAR</button><button class="secondary" onclick="map.setView(['+h.lat+','+h.lon+'],18)">📍 VER EN MAPA</button></div></article>').join('')}
-render();
+title.textContent=pos?'📍 Hidrantes más cercanos':'🗺️ Hidrantes';
+list.innerHTML=show.map(h=>'<article class="card '+(pos?'near':'')+'"><h3>'+esc(h.name)+' <span class="badge '+h.status+'">'+(h.status==='verde'?'OPERATIVO':h.status==='naranja'?'PENDIENTE':'NO OPERATIVO')+'</span></h3>'+(h.d!==null?'<p id="dist-'+h.i+'"><b>Calculando distancia por carretera…</b></p>':'')+'<p class="muted">'+h.lat.toFixed(6)+', '+h.lon.toFixed(6)+'</p>'+(h.description?'<p>'+esc(h.description)+'</p>':'')+'<div class="actions"><button onclick="nav('+h.i+')">🧭 CÓMO LLEGAR</button><button class="secondary" onclick="map.setView(['+h.lat+','+h.lon+'],18)">📍 VER EN MAPA</button></div></article>').join('');
+if(pos){for(const h of show){routeDistance(pos.lat,pos.lon,h.lat,h.lon).then(m=>{const el=document.getElementById('dist-'+h.i);if(el)el.innerHTML=m!=null?'<b>'+fmtDist(m)+'</b> por carretera desde tu ubicación':'<b>'+fmtDist(h.d)+'</b> en línea aproximada';});}}}
+if(typeof APP_INFO!=='undefined'){updateTitle.textContent=APP_INFO.updateTitle;updateText.textContent=APP_INFO.updateText;appVersion.textContent=APP_INFO.version;dataDate.textContent=APP_INFO.lastUpdate;}render();
 </script></body></html>
