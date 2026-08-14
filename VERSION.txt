@@ -1,0 +1,6 @@
+GEOHIDRANTE CANARIAS V3.5
+Datos: 780 hidrantes
+Actualización: 14/08/2026
+Nuevos: 60
+Modificados: 591
+Retirados: 36
