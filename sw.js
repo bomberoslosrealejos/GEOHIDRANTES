@@ -1,4 +1,4 @@
-const VERSION='geohid-canarias-v35-install-20260814';
+const VERSION='geohid-canarias-v35-counter';
 const APP_SHELL=['./','./index.html','./data.js','./manifest.json','./escudo.png','./camion.svg','./analytics-config.js'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
